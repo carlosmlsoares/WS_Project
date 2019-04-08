@@ -1,0 +1,68 @@
+{% extends 'static.html' %}
+{% load static %}
+
+{% block bodycontent %}
+<!-- comedy-w3l-agileits -->
+	<div class="wthree-comedy">
+	    <!-- /w3l-medile-movies-grids -->
+			<div class="w3l-medile-movies-grids">
+				<!-- /movie-browse-agile -->
+				      <div class="movie-browse-agile">
+					     <!--/browse-agile-w3ls -->
+						<div class="browse-agile-w3ls general-w3ls">
+							<div class="container">
+									<!-- /latest-movies1 -->
+							    <div class="browse-inner-come-agile-w3">
+                                    {% for i in "1234"  %}
+
+							   <div class="col-md-2 w3l-movie-gride-agile">
+										 <a href="movie.html" ><img src="{% static 'images/c1.jpg' %}" />
+
+									</a>
+									  <div class="mid-1">
+										<div class="w3l-movie-text">
+											<h6><a href="movie.html">Moana</a></h6>
+										</div>
+										<div class="mid-2">
+
+											<p>2016</p>
+											<div class="block-stars">
+												<ul class="w3l-ratings">
+													     <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+														 <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+														 <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+														  <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>
+														  <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
+
+
+												</ul>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+
+									</div>
+
+									</div>
+
+                                {% endfor %}
+
+
+
+
+								<div class="clearfix"> </div>
+								</div>
+								</div>
+						</div>
+				<!--//browse-agile-w3ls -->
+
+					</div>
+				<!-- //movie-browse-agile -->
+				<!--body wrapper start-->
+
+			</div>	
+		</div>
+	<!-- //w3l-medile-movies-grids -->
+	</div>
+	<!-- //comedy-w3l-agileits -->
+<!-- footer -->
+{% endblock %}
