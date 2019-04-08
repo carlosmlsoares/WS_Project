@@ -22,6 +22,9 @@ urlpatterns = [
     path('', views.index, name="index"),
 path('details/', views.details, name="details"),
 path('list/', views.list, name="list"),
-
+path('actors/', views.actors, name="actors"),
+path('directors/', views.directors, name="directors"),
+path('genres/', views.genres, name="genres"),
+path('search/', views.search, name="search"),
 
 ]

@@ -5,6 +5,7 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,8 +107,31 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
 					<nav>
 						<ul class="nav navbar-nav">
-							<li class="active"><a href="/">Home</a></li>
+							<li  class="active"><a href="/">Home</a></li>
 							<li><a href="/list/">Movies</a></li>
+                            <li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Genres <b class="caret"></b></a>
+								<ul class="dropdown-menu multi-column columns-2">
+									<li>
+										<div class="col-sm-6">
+											<ul class="multi-column-dropdown">
+												<li><a href="/genres/">Horror</a></li>
+												<li><a href="/genres/">Romance</a></li>
+											</ul>
+										</div>
+										<div class="col-sm-6">
+											<ul class="multi-column-dropdown">
+												<li><a href="/genres/">Fantasy</a></li>
+												<li><a href="/genres/">Thriller</a></li>
+											</ul>
+										</div>
+
+										<div class="clearfix"></div>
+									</li>
+								</ul>
+							</li>
+                            <li><a href="/directors/">Directors</a></li>
+                            <li><a href="/actors/">Actors</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -656,9 +680,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									<p class="fexi_header_para"><span>Date of Release<label>:</label></span> Jun 10, 2016 </p>
 									<p class="fexi_header_para">
 										<span>Genres<label>:</label> </span>
-										<a href="genres.html">Drama</a> |
-										<a href="genres.html">Adventure</a> |
-										<a href="genres.html">Family</a>
+										<a href="/genres/">Drama</a> |
+										<a href="/genres/">Adventure</a> |
+										<a href="/genres/">Family</a>
 									</p>
 									<p class="fexi_header_para fexi_header_para1"><span>Star Rating<label>:</label></span>
 										<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
@@ -846,8 +870,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 									<p class="fexi_header_para"><span>Date of Release<label>:</label></span> Oct 09, 2015 </p>
 									<p class="fexi_header_para">
 										<span>Genres<label>:</label> </span>
-										<a href="genres.html">Thriller</a> |
-										<a href="genres.html">Horror</a>
+										<a href="/genres/">Thriller</a> |
+										<a href="/genres/">Horror</a>
 									</p>
 									<p class="fexi_header_para fexi_header_para1"><span>Star Rating<label>:</label></span>
 										<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
