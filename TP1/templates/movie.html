@@ -2,66 +2,71 @@
 {% load static %}
 
 {% block bodycontent %}
-<!-- single -->
-<div class="single-page-agile-main">
-<div class="container">
-		<!-- /w3l-medile-movies-grids -->
-			<div class="agileits-single-top">
-				<ol class="breadcrumb">
-				  <li><a href="index.html">Home</a></li>
-				  <li class="active">Details</li>
-				</ol>
-			</div>
-            <h4 class="latest-text w3_faq_latest_text w3_latest_text">Details</h4>
-			<div class="single-page-agile-info">
-                   <!-- /movie-browse-agile -->
+    <div class="single-page-agile-main">
+        <div class="container">
+            <h4 class="latest-text w3_faq_latest_text w3_latest_text">{{ movie.title }}</h4>
+            <div class="single-page-agile-info">
                 <div class="show-top-grids-w3lagile">
-				<div class="col-sm-12 single-left">
+                    <div class="col-sm-12 single-left">
 
-                    <div class="agile_tv_series_grid">
-
-								<div class="col-md-6 " style="width: 100%">
-                                    <div class="col-md-6">
-                                     <center><img width="50%" src="{% static 'images/m11.jpg' %}" alt=" " class="img-responsive" /></center>
-                                    </div>
-                                    <div class="col-md-6 agile_tv_series_grid_right">
-									<p class="fexi_header">the conjuring 2</p>
-									<p class="fexi_header_para"><span class="conjuring_w3">Story Line<label>:</label></span> 720p,Bluray HD Free Movie Downloads, Watch Free Movies Online with high speed Free Movie Streaming | MyDownloadTube Lorraine and Ed Warren go to north London to help a single...</p>
-									<p class="fexi_header_para"><span>Date of Release<label>:</label></span> Jun 10, 2016 </p>
-									<p class="fexi_header_para">
-										<span>Genres<label>:</label> </span>
-										<a href="/genres/">Drama</a> |
-										<a href="/genres/">Adventure</a> |
-										<a href="/genres/">Family</a>
-									</p>
-									<p class="fexi_header_para fexi_header_para1"><span>Star Rating<label>:</label></span>
-										<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-										<a href="#"><i class="fa fa-star" aria-hidden="true"></i></a>
-										<a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a>
-										<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-										<a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a>
-									</p>
+                        <div class="agile_tv_series_grid">
+                            <div class="col-md-6 " style="width: 100%">
+                                <div class="col-md-6">
+                                    <img data-imdb="{{ id }}" title="{{ movie.title }}" class="img-responsive" alt="{{ movie.title }}" />
+                                </div>
+                                <div class="col-md-6 agile_tv_series_grid_right">
+                                    <p class="fexi_header">
+                                        <span class="conjuring_w3">Year<label>:</label></span>
+                                        {{ movie.year }}
+                                    </p>
+                                    <p class="fexi_header">
+                                        <span class="conjuring_w3">Score<label>:</label></span>
+                                        {{ movie.score }}<i class="fa ml-2 fa-star" aria-hidden="true"></i>
+                                    </p>
+                                    <p class="fexi_header">
+                                        <span class="conjuring_w3">Director<label>:</label></span>
+                                        <a href="{% url 'director' movie.director_id %}">
+                                            <span>{{ movie.director }}</span>
+                                        </a>
+                                    </p>
+                                    <p class="fexi_header">
+                                        <span>Genres<label>:</label> </span>
+                                        {% for genre in movie_genres %}
+                                            <a href="{% url 'genre' genre.id %}">
+                                                <span>{{ genre.name }}</span>
+                                            </a>
+                                        {% endfor %}
+                                    </p>
+                                    <p class="fexi_header">
+                                        <span>Actors<label>:</label> </span>
+                                        {% for actor in actors %}
+                                            <a href="{% url 'actor' actor.id %}">
+                                                <span>{{ actor.name }}</span>
+                                            </a>
+                                        {% endfor %}
+                                    </p>
                                     <br>
-                                        </div>
-								</div>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
-					<div class="clearfix"> </div>
 
-
-				</div>
-
-
-				<div class="clearfix"> </div>
-			</div>
-				<!-- //movie-browse-agile -->
-				<!--body wrapper start-->
-
-							 
-				</div>
-				<!-- //w3l-latest-movies-grids -->
-
-			</div>	
-		</div>
-	<!-- //w3l-medile-movies-grids -->
-</div>
+{% block endbodycontent %}
+<script>
+    $('img[data-imdb]').each(function(){
+        $.ajax({
+            url: "https://www.omdbapi.com/?i=" + $(this).data('imdb') + "&apikey=f614bcc4"
+        }).done(function(data){
+            $('img[data-imdb=' + data['imdbID'] + ']').attr('src', data['Poster']);
+        })
+    });
+</script>
 {% endblock %}

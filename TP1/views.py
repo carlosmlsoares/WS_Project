@@ -20,14 +20,17 @@ def movies(request):
 def movie(request, id):
     return render(request, "movie.html", {
         'id': id,
-        'genres': get_genres()
+        'genres': get_genres(),
+        'movie': get_movie_details(id),
+        'actors': get_movie_actors(id),
+        'movie_genres': get_movie_genres(id)
     })
 
 
 def actors(request):
     return render(request, "actors.html", {
         'genres': get_genres(),
-        'actors':get_all_actors()
+        'actors': get_all_actors()
     })
 
 
@@ -42,7 +45,7 @@ def actor(request, id):
 def directors(request):
     return render(request, "directors.html", {
         'genres': get_genres(),
-        'directors':get_all_directors()
+        'directors': get_all_directors()
     })
 
 
@@ -228,13 +231,49 @@ def search_actors(term):
 
 def movies_by_genre(genre):
     return sparql("""
-            SELECT *
-            WHERE { 
-                ?id movie:title ?movie.
-                OPTIONAL{
-                    ?id movie:year ?year.
-                    ?id movie:score ?score.
-                    ?id movie:genre genre:toSearch
-                }
+        SELECT *
+        WHERE { 
+            ?id movie:title ?movie.
+            OPTIONAL{
+                ?id movie:year ?year.
+                ?id movie:score ?score.
+                ?id movie:genre genre:toSearch
             }
-            ORDER BY DESC(?year) DESC(?score) LIMIT 500""".replace("toSearch", genre))
+        }
+        ORDER BY DESC(?year) DESC(?score)
+        LIMIT 500
+    """.replace("toSearch", genre))
+
+
+def get_movie_details(id):
+    result = sparql("""
+        SELECT *
+        WHERE {
+            movie:""" + id + """ movie:title ?title.
+            movie:""" + id + """ movie:year ?year.
+            movie:""" + id + """ movie:score ?score.
+            ?director_id worker:directed movie:""" + id + """.
+            ?director_id worker:name ?director.
+        }
+    """)
+    return result[0] if result else None
+
+
+def get_movie_genres(id):
+    return sparql("""
+        SELECT *
+        WHERE {
+            movie:""" + id + """ movie:genre ?id.
+            ?id genre:name ?name.
+        }
+    """)
+
+
+def get_movie_actors(id):
+    return sparql("""
+        SELECT *
+        WHERE {
+            ?id worker:played_on movie:""" + id + """.
+            ?id worker:name ?name.
+        }
+    """)
