@@ -29,5 +29,7 @@ def sparql(query):
     CONN.setReturnFormat(JSON)
     json = CONN.query().convert()
 
-    result = [{var: clean(row[var]["value"]) for var in json['head']['vars']} for row in json["results"]["bindings"]]
+    headers = json['head']['vars']
+    result = [{var: clean(row[var]["value"]) for var in headers}
+              for row in json["results"]["bindings"] if all([var in row for var in headers])]
     return result

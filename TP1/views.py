@@ -25,55 +25,23 @@ def actors(request):
 
 
 def actor(request, id):
-    query = """SELECT ?name
-                    WHERE {
-                        worker:""" + id + """ worker:name ?name.
-                        }
-                    LIMIT 1
-                    """
+    return render(request, "actor.html", {
+        'id': id,
+        'name': get_worker_name(id),
+        'content': get_actor_movies(id)
+    })
 
-    name = sparql(query)[0]['name']
-
-    query = """SELECT ?movie ?title ?year ?score
-            WHERE {
-                worker:""" + id + """ worker:played_on ?movie .
-                ?movie movie:title ?title.
-                ?movie movie:year ?year.
-                ?movie movie:score ?score.
-
-            }"""
-
-    content = sparql(query)
-
-    return render(request, "actor.html", {'id': id, 'name': name, 'content': content})
 
 def directors(request):
     return render(request, "directors.html", {})
 
 
 def director(request, id):
-    query = """SELECT ?name
-                WHERE {
-                    worker:"""+id+""" worker:name ?name.
-                    }
-                LIMIT 1
-                """
-
-    name = sparql(query)[0]['name']
-
-    query="""SELECT ?movie ?title ?year ?score
-        WHERE {
-            worker:""" +id+""" worker:directed ?movie .
-            ?movie movie:title ?title.
-            ?movie movie:year ?year.
-            ?movie movie:score ?score.
-            
-        }"""
-
-    content = sparql(query)
-
-
-    return render(request, "director.html", {'id': id,'name':name,'content':content})
+    return render(request, "director.html", {
+        'id': id,
+        'name': get_worker_name(id),
+        'content': get_director_movies(id)
+    })
 
 
 def genre(request, id):
@@ -81,52 +49,14 @@ def genre(request, id):
 
 
 def search(request):
+    term = request.GET['term'] if 'term' in request.GET else 'John Doe'
 
-    term=request.GET['term']
-
-
-    query="""SELECT ?id ?title ?year ?score
-        WHERE {
-            ?id movie:title ?title.
-            ?id movie:year ?year.
-            ?id movie:score ?score.
-            FILTER (CONTAINS(LCASE(?title), "TERM"))
-        }
-        GROUP BY ?id ?title 
-        LIMIT 20""".replace("TERM", term)
-
-    movies=sparql(query)
-    print(movies)
-
-
-    query="""SELECT ?id ?name (COUNT(?movie) AS ?movies)
-        WHERE {
-            ?id worker:directed ?movie.
-            ?id worker:name ?name.
-            FILTER (CONTAINS(LCASE(?name), "TERM"))
-        }
-        GROUP BY ?id ?name
-        ORDER BY DESC (?movies)
-        LIMIT 20 """.replace("TERM", term)
-
-    directors = sparql(query)
-    print(directors)
-
-
-    query = """SELECT ?id ?name (COUNT(?movie) AS ?movies)
-            WHERE {
-                ?id worker:played_on ?movie.
-                ?id worker:name ?name.
-                FILTER (CONTAINS(LCASE(?name), "TERM"))
-            }
-            GROUP BY ?id ?name
-            ORDER BY DESC (?movies)
-            LIMIT 20 """.replace("TERM", term)
-
-    actors = sparql(query)
-    print(actors)
-
-    return render(request, "search.html", {'term':term,'directors':directors,'movies':movies,'actors':actors})
+    return render(request, "search.html", {
+        'term': term,
+        'directors': search_directors(term),
+        'movies': search_movies(term),
+        'actors': search_actors(term)
+    })
 
 
 def get_genres():
@@ -181,3 +111,77 @@ def get_all_movies():
         LIMIT 40
     """)
 
+
+def get_worker_name(id):
+    worker = sparql("""
+        SELECT ?name
+        WHERE {
+            worker:""" + id + """ worker:name ?name.
+            }
+        LIMIT 1
+    """)
+
+    return worker[0]['name'] if worker and 'name' in worker[0] else None
+
+
+def get_actor_movies(id):
+    return sparql("""
+        SELECT ?movie ?title ?year ?score
+        WHERE {
+            worker:""" + id + """ worker:played_on ?movie .
+            ?movie movie:title ?title.
+            ?movie movie:year ?year.
+            ?movie movie:score ?score.
+        
+        }
+    """)
+
+
+def get_director_movies(id):
+    return sparql("""
+        SELECT ?movie ?title ?year ?score
+        WHERE {
+            worker:""" + id + """ worker:directed ?movie .
+            ?movie movie:title ?title.
+            ?movie movie:year ?year.
+            ?movie movie:score ?score.
+        }
+    """)
+
+
+def search_movies(term):
+    return sparql("""
+        SELECT ?id ?title ?year ?score
+        WHERE {
+            ?id movie:title ?title.
+            ?id movie:year ?year.
+            ?id movie:score ?score.
+            FILTER (CONTAINS(LCASE(?title), LCASE("TERM")))
+        }
+    """.replace("TERM", term))
+
+
+def search_directors(term):
+    return sparql("""
+        SELECT ?id ?name (COUNT(?movie) AS ?movies)
+        WHERE {
+            ?id worker:directed ?movie.
+            ?id worker:name ?name.
+            FILTER (CONTAINS(LCASE(?name), LCASE("TERM")))
+        }
+        GROUP BY ?id ?name
+        ORDER BY DESC (?movies)
+    """.replace("TERM", term))
+
+
+def search_actors(term):
+    return sparql("""
+        SELECT ?id ?name (COUNT(?movie) AS ?movies)
+        WHERE {
+            ?id worker:played_on ?movie.
+            ?id worker:name ?name.
+            FILTER (CONTAINS(LCASE(?name), LCASE("TERM")))
+        }
+        GROUP BY ?id ?name
+        ORDER BY DESC (?movies)
+    """.replace("TERM", term))
