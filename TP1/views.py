@@ -26,7 +26,8 @@ def movie(request, id):
 
 def actors(request):
     return render(request, "actors.html", {
-        'genres': get_genres()
+        'genres': get_genres(),
+        'actors':get_all_actors()
     })
 
 
@@ -40,7 +41,8 @@ def actor(request, id):
 
 def directors(request):
     return render(request, "directors.html", {
-        'genres': get_genres()
+        'genres': get_genres(),
+        'directors':get_all_directors()
     })
 
 
@@ -55,7 +57,8 @@ def director(request, id):
 def genre(request, id):
     return render(request, "genre.html", {
         'id': id,
-        'genres': get_genres()
+        'genres': get_genres(),
+        'movies': movies_by_genre(id)
     })
 
 
@@ -161,6 +164,30 @@ def get_director_movies(id):
     """)
 
 
+def get_all_actors():
+    return sparql("""
+            SELECT ?id ?name (COUNT(?movie) AS ?movies)
+            WHERE {
+                ?id worker:played_on ?movie.
+                ?id worker:name ?name.
+            }
+            GROUP BY ?id ?name
+            ORDER BY DESC (?movies)
+        LIMIT 500""")
+
+
+def get_all_directors():
+    return sparql("""
+            SELECT ?id ?name (COUNT(?movie) AS ?movies)
+            WHERE {
+                ?id worker:directed ?movie.
+                ?id worker:name ?name.
+            }
+            GROUP BY ?id ?name
+            ORDER BY DESC (?movies)
+        LIMIT 500""")
+
+
 def search_movies(term):
     return sparql("""
         SELECT ?id ?title ?year ?score
@@ -197,3 +224,17 @@ def search_actors(term):
         GROUP BY ?id ?name
         ORDER BY DESC (?movies)
     """.replace("TERM", term))
+
+
+def movies_by_genre(genre):
+    return sparql("""
+            SELECT *
+            WHERE { 
+                ?id movie:title ?movie.
+                OPTIONAL{
+                    ?id movie:year ?year.
+                    ?id movie:score ?score.
+                    ?id movie:genre genre:toSearch
+                }
+            }
+            ORDER BY DESC(?year) DESC(?score) LIMIT 500""".replace("toSearch", genre))

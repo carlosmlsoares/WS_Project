@@ -19,7 +19,7 @@ def clean(value):
     if value.isdigit():
         return int(value)
     try:
-        value = float(value)
+        return float(value)
     except:
         return unidecode(value).strip()
 
