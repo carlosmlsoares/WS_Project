@@ -1,15 +1,19 @@
 from django.shortcuts import render
 from TP1.db import sparql
 
-# Create your views here.
+
 def index(request):
     return render(request, "index.html", {
-        'genres': get_genres()
+        'genres': get_genres(),
+        'new': get_new_movies(),
+        'trending': get_trending_movies()
     })
 
 
 def movies(request):
-    return render(request, "movies.html", {})
+    return render(request, "movies.html", {
+        'movies': get_all_movies()
+    })
 
 
 def movie(request, id):
@@ -135,3 +139,45 @@ def get_genres():
         GROUP BY ?id ?name
         ORDER BY DESC(COUNT(?movie))
     """)
+
+
+def get_new_movies():
+    return sparql("""
+        SELECT *
+        WHERE { 
+            ?id movie:title ?title.
+            ?id movie:year ?year.
+            ?id movie:score ?score.
+        }
+        ORDER BY DESC(?year) DESC(?score)
+        LIMIT 6
+    """)
+
+
+def get_trending_movies():
+    return sparql("""
+        SELECT *
+        WHERE { 
+            ?id movie:title ?title.
+            ?id movie:year ?year.
+            OPTIONAL{
+                ?id movie:score ?score.
+            }
+        }
+        ORDER BY DESC(?year) DESC(?views)
+        LIMIT 6
+    """)
+
+
+def get_all_movies():
+    return sparql("""
+        SELECT *
+        WHERE { 
+            ?id movie:title ?title.
+            ?id movie:year ?year.
+            ?id movie:score ?score.
+        }
+        ORDER BY DESC(?year) DESC(?score)
+        LIMIT 40
+    """)
+
