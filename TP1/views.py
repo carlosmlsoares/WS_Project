@@ -12,16 +12,22 @@ def index(request):
 
 def movies(request):
     return render(request, "movies.html", {
+        'genres': get_genres(),
         'movies': get_all_movies()
     })
 
 
 def movie(request, id):
-    return render(request, "movie.html", {'id': id})
+    return render(request, "movie.html", {
+        'id': id,
+        'genres': get_genres()
+    })
 
 
 def actors(request):
-    return render(request, "actors.html", {})
+    return render(request, "actors.html", {
+        'genres': get_genres()
+    })
 
 
 def actor(request, id):
@@ -33,7 +39,9 @@ def actor(request, id):
 
 
 def directors(request):
-    return render(request, "directors.html", {})
+    return render(request, "directors.html", {
+        'genres': get_genres()
+    })
 
 
 def director(request, id):
@@ -45,13 +53,17 @@ def director(request, id):
 
 
 def genre(request, id):
-    return render(request, "genre.html", {'id': id})
+    return render(request, "genre.html", {
+        'id': id,
+        'genres': get_genres()
+    })
 
 
 def search(request):
     term = request.GET['term'] if 'term' in request.GET else 'John Doe'
 
     return render(request, "search.html", {
+        'genres': get_genres(),
         'term': term,
         'directors': search_directors(term),
         'movies': search_movies(term),
