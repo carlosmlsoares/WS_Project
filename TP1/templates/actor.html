@@ -1,5 +1,53 @@
 {% extends 'static.html' %}
 {% load static %}
 
+{% block headcontent %}
+    <link href="{% static 'css/list.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{% static 'css/table-style.css' %}" rel="stylesheet" type="text/css" media="all" />
+{% endblock %}
+
+
+
 {% block bodycontent %}
+
+<!-- faq-banner -->
+	<div class="faq">
+		<h4 class="latest-text w3_faq_latest_text w3_latest_text">{{ name }}</h4>
+			<div class="container">
+				<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+
+						<div id="myTabContent" class="tab-content">
+							<div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+								<div class="agile-news-table">
+									<div class="w3ls-news-result">
+										<h4>Search Results : <span>{{ content|length }}</span></h4>
+									</div>
+									<table id="table-breakpoint">
+										<thead>
+										  <tr>
+											<th>No.</th>
+                                              <th>Title</th>
+											<th>Year</th>
+											<th>Score</th>
+
+										  </tr>
+										</thead>
+										<tbody>
+                                            {% for i in content %}
+                                                <tr>
+											    <td>{{ forloop.counter }}</td>
+											    <td class="w3-list-img"><a href="{% url 'movie' i.movie %}"> <span>{{ i.title }}</span></a></td>
+											    <td>{{ i.year }}</td>
+											    <td>{{ i.score }}</td>
+										        </tr>
+										    {% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+							</div>
+				</div>
+			</div>
+	</div>
+<!-- //faq-banner -->
 {% endblock %}
