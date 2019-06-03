@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from TP1.db import sparql
+from TP1.wikidata import wikisparql
 
 
 def index(request):
@@ -23,7 +24,8 @@ def movie(request, id):
         'genres': get_genres(),
         'movie': get_movie_details(id),
         'actors': get_movie_actors(id),
-        'movie_genres': get_movie_genres(id)
+        'movie_genres': get_movie_genres(id),
+        'awards':get_movie_awards(id)
     })
 
 
@@ -277,3 +279,14 @@ def get_movie_actors(id):
             ?id worker:name ?name.
         }
     """)
+
+def get_movie_awards(id):
+    return wikisparql("""
+        SELECT ?awardsLabel 
+            WHERE 
+            {
+              ?movie wdt:P345 "ID".
+              ?movie wdt:P166 ?awards.
+              SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+            }
+    """.replace("ID",id))

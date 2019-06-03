@@ -1,8 +1,13 @@
 {% extends 'static.html' %}
 {% load static %}
 
+{% block headcontent %}
+    <link href="{% static 'css/list.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{% static 'css/table-style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
 {% block bodycontent %}
-    <div class="single-page-agile-main">
+    <div class="single-page-agile-main" typeof="Movie">
         <div class="container">
             <h4 class="latest-text w3_faq_latest_text w3_latest_text">{{ movie.title }}</h4>
             <div class="single-page-agile-info">
@@ -26,7 +31,7 @@
                                     <p class="fexi_header">
                                         <span class="conjuring_w3">Director<label>:</label></span>
                                         <a href="{% url 'director' movie.director_id %}">
-                                            <span>{{ movie.director }}</span>
+                                            <span property="director">{{ movie.director }}</span>
                                         </a>
                                     </p>
                                     <p class="fexi_header">
@@ -41,7 +46,7 @@
                                         <span>Actors<label>:</label> </span>
                                         {% for actor in actors %}
                                             <a href="{% url 'actor' actor.id %}">
-                                                <span>{{ actor.name }}</span>
+                                                <span property="actor_name">{{ actor.name }}</span>
                                             </a>
                                         {% endfor %}
                                     </p>
@@ -54,8 +59,45 @@
                     </div>
                 </div>
             </div>
+        <h3 class="latest-text w3_faq_latest_text w3_latest_text">Awards List</h3>
+        <br>
+			<div class="container">
+
+				<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+
+						<div id="myTabContent" class="tab-content">
+							<div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+								<div class="agile-news-table">
+									<div class="w3ls-news-result">
+										<h4>No Of Results : <span>{{ awards|length }}</span></h4>
+									</div>
+									<table id="table-breakpoint">
+										<thead>
+										  <tr>
+											<th>No.</th>
+											<th>Awards</th>
+										  </tr>
+										</thead>
+										<tbody>
+                                            {% for i in awards %}
+                                                <tr>
+											    <td>{{ forloop.counter }}</td>
+											    <td property="award">{{ i.awardsLabel }}</td>
+										        </tr>
+										    {% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+                            </div>
+
+				</div>
+			</div>
+	</div>
         </div>
     </div>
+
+
 {% endblock %}
 
 
