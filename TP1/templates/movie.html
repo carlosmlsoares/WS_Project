@@ -29,25 +29,34 @@
                                         {{ movie.score }}<i class="fa ml-2 fa-star" aria-hidden="true"></i>
                                     </p>
                                     <p class="fexi_header">
-                                        <span class="conjuring_w3">Director<label>:</label></span>
+                                        <span>Companies<label>:</label> </span><br>
+                                        {% for company in companies %}
+                                            <span style="font-size: 20px">{{ company.companiesLabel }}</span>
+                                            <br>
+                                        {% endfor %}
+                                    </p>
+                                    <p class="fexi_header">
+                                        <span class="conjuring_w3">Director<label>:</label></span><br>
                                         <a href="{% url 'director' movie.director_id %}">
                                             <span property="director">{{ movie.director }}</span>
                                         </a>
                                     </p>
                                     <p class="fexi_header">
-                                        <span>Genres<label>:</label> </span>
-                                        {% for genre in movie_genres %}
-                                            <a href="{% url 'genre' genre.id %}">
-                                                <span>{{ genre.name }}</span>
-                                            </a>
-                                        {% endfor %}
-                                    </p>
-                                    <p class="fexi_header">
-                                        <span>Actors<label>:</label> </span>
+                                        <span>Actors<label>:</label> </span><br>
                                         {% for actor in actors %}
                                             <a href="{% url 'actor' actor.id %}">
                                                 <span property="actor_name">{{ actor.name }}</span>
                                             </a>
+                                            <br>
+                                        {% endfor %}
+                                    </p>
+                                    <p class="fexi_header">
+                                        <span>Genres<label>:</label> </span><br>
+                                        {% for genre in movie_genres %}
+                                            <a href="{% url 'genre' genre.id %}">
+                                                <span>{{ genre.name }}</span>
+                                            </a>
+                                            <br>
                                         {% endfor %}
                                     </p>
                                     <br>
@@ -59,6 +68,42 @@
                     </div>
                 </div>
             </div>
+        <h3 class="latest-text w3_faq_latest_text w3_latest_text">Nomeations List</h3>
+        <br>
+			<div class="container">
+
+				<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+
+						<div id="myTabContent" class="tab-content">
+							<div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+								<div class="agile-news-table">
+									<div class="w3ls-news-result">
+										<h4>No Of Results : <span>{{ nomeations|length }}</span></h4>
+									</div>
+									<table id="table-breakpoint">
+										<thead>
+										  <tr>
+											<th>No.</th>
+											<th>Award</th>
+										  </tr>
+										</thead>
+										<tbody>
+                                            {% for i in nomeations %}
+                                                <tr>
+											    <td>{{ forloop.counter }}</td>
+											    <td property="nomeations">{{ i.nominatedForLabel }}</td>
+										        </tr>
+										    {% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+                            </div>
+
+				</div>
+			</div>
+
+        <br>
         <h3 class="latest-text w3_faq_latest_text w3_latest_text">Awards List</h3>
         <br>
 			<div class="container">
@@ -103,12 +148,12 @@
 
 {% block endbodycontent %}
 <script>
-    $('img[data-imdb]').each(function(){
+    /*$('img[data-imdb]').each(function(){
         $.ajax({
             url: "https://www.omdbapi.com/?i=" + $(this).data('imdb') + "&apikey=f614bcc4"
         }).done(function(data){
             $('img[data-imdb=' + data['imdbID'] + ']').attr('src', data['Poster']);
         })
-    });
+    });*/
 </script>
 {% endblock %}

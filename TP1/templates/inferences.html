@@ -1,0 +1,43 @@
+{% extends 'static.html' %}
+{% load static %}
+
+{% block headcontent %}
+    <link href="{% static 'css/list.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <link href="{% static 'css/table-style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+{% endblock %}
+
+{% block bodycontent %}
+<!-- faq-banner -->
+    <div class="faq">
+		<h4 class="latest-text w3_faq_latest_text w3_latest_text">Inferences</h4>
+			<div class="container">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h2 class="card-title">Trending Movies</h2><br>
+                        <span class="card-text">
+                            Esta inferência é responsável por apresentar as tendências no mundo dos filmes.
+                        </span>
+                        <br><br><a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <br><br>
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h2 class="card-title">Trending Movies</h2><br>
+                        <span class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</span>
+                        <br><br><a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <br><br>
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h2 class="card-title">Trending Movies</h2><br>
+                        <span class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</span>
+                        <br><br><a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+			</div>
+	</div>
+<!-- //faq-banner -->
+<!-- footer -->
+{% endblock %}

@@ -25,7 +25,9 @@ def movie(request, id):
         'movie': get_movie_details(id),
         'actors': get_movie_actors(id),
         'movie_genres': get_movie_genres(id),
-        'awards':get_movie_awards(id)
+        'awards':get_movie_awards(id),
+        'nomeations': get_movie_nomeations(id),
+        'companies': get_movie_companies(id)
     })
 
 
@@ -55,7 +57,8 @@ def director(request, id):
     return render(request, "director.html", {
         'id': id,
         'name': get_worker_name(id),
-        'content': get_director_movies(id)
+        'content': get_director_movies(id),
+        'genres':get_genres()
     })
 
 
@@ -66,6 +69,10 @@ def genre(request, id):
         'movies': movies_by_genre(id)
     })
 
+def inferences(request):
+    return render(request, "inferences.html", {
+        'genres': get_genres()
+    })
 
 def search(request):
     term = request.GET['term'] if 'term' in request.GET else 'John Doe'
@@ -287,6 +294,28 @@ def get_movie_awards(id):
             {
               ?movie wdt:P345 "ID".
               ?movie wdt:P166 ?awards.
+              SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+            }
+    """.replace("ID",id))
+
+def get_movie_nomeations(id):
+    return wikisparql("""
+        SELECT ?nominatedForLabel 
+            WHERE 
+            {
+              ?movie wdt:P345 "ID".
+              ?movie wdt:P1411 ?nominatedFor.
+              SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+            }
+    """.replace("ID",id))
+
+def get_movie_companies(id):
+    return wikisparql("""
+        SELECT ?companiesLabel 
+            WHERE 
+            {
+              ?movie wdt:P345 "ID".
+              ?movie wdt:P272 ?companies
               SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
             }
     """.replace("ID",id))
