@@ -6,14 +6,15 @@
         <div class="container">
             <div class="row">
                 {% for movie in movies  %}
-                <div class="col-12 col-md-4 col-lg-2 w3l-movie-gride-agile" style="min-height: 30vh;">
+                <div class="col-12 col-md-4 col-lg-2 w3l-movie-gride-agile" style="min-height: 30vh;"
+                vocab="http://schema.org/" resource="#{{ movie.id }}" typeof="Movie">
                     <a href="{% url 'movie' movie.id %}">
-                        <img data-imdb="{{ movie.id }}" title="{{ movie.title }}" class="img-responsive" alt="{{ movie.title }}" />
+                        <img data-imdb="{{ movie.id }}" title="{{ movie.title }}" class="img-responsive" alt="{{ movie.title }}" style="height: 30vh;" />
                     </a>
                     <div class="mid-1">
                         <div class="w3l-movie-text">
-                            <h6>
-                                <a href="movie.html">
+                            <h6 style="overflow: hidden;">
+                                <a href="movie.html" style="max-width: 100%; text-overflow: ellipsis; white-space: nowrap;" property="title">
                                     {{ movie.title }}
                                 </a>
                             </h6>
@@ -23,7 +24,7 @@
                         <p>{{ movie.year }}</p>
                         <div class="block-stars">
                             <ul class="w3l-ratings">
-                                <li>
+                                <li property="rating">
                                     {{ movie.score }}<i class="fa fa-star" aria-hidden="true"></i>
                                 </li>
                             </ul>
@@ -40,12 +41,12 @@
 
 {% block endbodycontent %}
 <script>
-    /*$('img[data-imdb]').each(function(){
+    $('img[data-imdb]').each(function(){
         $.ajax({
             url: "https://www.omdbapi.com/?i=" + $(this).data('imdb') + "&apikey=f614bcc4"
         }).done(function(data){
             $('img[data-imdb=' + data['imdbID'] + ']').attr('src', data['Poster']);
         })
-    });*/
+    });
 </script>
 {% endblock %}
