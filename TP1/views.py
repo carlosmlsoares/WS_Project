@@ -43,7 +43,8 @@ def actor(request, id):
         'id': id,
         'genres': get_genres(),
         'name': get_worker_name(id),
-        'content': get_actor_movies(id)
+        'content': get_actor_movies(id),
+        'worked_with': get_worked_with(id)
     })
 
 
@@ -380,3 +381,14 @@ def get_movie_companies(id):
               SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
             }
     """.replace("ID",id))
+
+
+def get_worked_with(id):
+    return sparql("""
+            SELECT *
+            WHERE {
+                worker:""" + id + """ movie:workedWith ?id.
+                ?id worker:name ?name.
+            }
+            LIMIT 6
+        """)

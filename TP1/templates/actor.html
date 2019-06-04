@@ -14,6 +14,38 @@
 	<div class="faq">
 		<h4 class="latest-text w3_faq_latest_text w3_latest_text">{{ name }}</h4>
 			<div class="container">
+            <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs1">
+
+						<div id="myTabContent1" class="tab-content">
+							<div role="tabpanel" class="tab-pane fade in active" id="home1" aria-labelledby="home-tab">
+								<div class="agile-news-table">
+									<div class="w3ls-news-result">
+										<h4>Worked with:</h4>
+									</div>
+									<table id="table-breakpoint">
+										<thead>
+										  <tr>
+											<th>No.</th><th>Name</th>
+
+										  </tr>
+										</thead>
+										<tbody>
+                                            {% for i in worked_with %}
+                                                <tr vocab="http://schema.org/" resource="#{{ i.id }}" typeof="Actor">
+											    <td>{{ forloop.counter }}</td>
+											    <td class="w3-list-img" property="name" content="{{ i.name }}">
+                                                    <a href="{% url 'actor' i.id %}"> <span>{{ i.name }}</span></a>
+                                                </td>
+										        </tr>
+										    {% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+                        </div>
+				</div>
+            <br>
+
 				<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
 
 						<div id="myTabContent" class="tab-content">
@@ -47,7 +79,7 @@
 									</table>
 								</div>
 							</div>
-							</div>
+                        </div>
 				</div>
 			</div>
 	</div>
