@@ -25,11 +25,15 @@ def clean(value):
 
 
 def sparql(query, insert=False):
+    if insert:
+        c = SPARQLWrapper("http://localhost:7200/repositories/imdb")
+        c.setMethod("POST")
+        c.setQuery(PREFIXES_SPARQL + query)
+        c.query()
+        return
+
     CONN.setQuery(PREFIXES_SPARQL + query)
     CONN.setReturnFormat(JSON)
-    if insert:
-        CONN.setMethod("POST")
-        # CONN.queryType = "DELETE"
     json = CONN.query().convert()
 
     headers = json['head']['vars']

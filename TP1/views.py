@@ -80,9 +80,7 @@ def inferences(request):
 def exec_inferences(request, id):
     if id == '00':
         sparql("""
-                DELETE {
-                    ?old movie:isNew true
-                } INSERT {
+                INSERT {
                     ?next movie:isNew true
                 }
                 WHERE { 
@@ -98,12 +96,10 @@ def exec_inferences(request, id):
                         LIMIT 6
                     }
                 }
-            """, True)
+            """)
     elif id == '01':
         sparql("""
-                DELETE {
-                    ?old movie:isTrending true
-                } INSERT {
+                INSERT {
                     ?next movie:isTrending true
                 }
                 WHERE { 
@@ -119,7 +115,7 @@ def exec_inferences(request, id):
                         LIMIT 6
                     }
                 }
-            """, True)
+            """)
     elif id == '02':
         sparql("""
                 SELECT ?id ?name
