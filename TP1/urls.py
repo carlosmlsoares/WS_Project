@@ -11,5 +11,6 @@ urlpatterns = [
     path('director/<id>', views.director, name="director"),
     path('genre/<id>', views.genre, name="genre"),
     path('search/', views.search, name="search"),
-    path('inferences/', views.inferences, name="inferences")
+    path('inferences/', views.inferences, name="inferences"),
+    path('inferences/<id>', views.exec_inferences, name="exec_inferences")
 ]

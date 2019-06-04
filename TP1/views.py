@@ -41,6 +41,7 @@ def actors(request):
 def actor(request, id):
     return render(request, "actor.html", {
         'id': id,
+        'genres': get_genres(),
         'name': get_worker_name(id),
         'content': get_actor_movies(id)
     })
@@ -69,10 +70,68 @@ def genre(request, id):
         'movies': movies_by_genre(id)
     })
 
+
 def inferences(request):
     return render(request, "inferences.html", {
         'genres': get_genres()
     })
+
+
+def exec_inferences(request, id):
+    if id == '00':
+        sparql("""
+                DELETE {
+                    ?old movie:isNew true
+                } INSERT {
+                    ?next movie:isNew true
+                }
+                WHERE { 
+                    {
+                        ?old movie:isNew true
+                    } UNION { 
+                        SELECT ?next
+                        WHERE {
+                            ?next movie:year ?year.
+                            ?next movie:score ?score.
+                        }
+                        ORDER BY DESC(?year) DESC(?score)
+                        LIMIT 6
+                    }
+                }
+            """, True)
+    elif id == '01':
+        sparql("""
+                DELETE {
+                    ?old movie:isTrending true
+                } INSERT {
+                    ?next movie:isTrending true
+                }
+                WHERE { 
+                    {
+                        ?old movie:isTrending true
+                    } UNION { 
+                        SELECT ?next
+                        WHERE {
+                            ?next movie:year ?year.
+                            ?next movie:views ?views.
+                        }
+                        ORDER BY DESC(?year) DESC(?views)
+                        LIMIT 6
+                    }
+                }
+            """, True)
+    elif id == '02':
+        sparql("""
+                SELECT ?id ?name
+                WHERE { 
+                    ?id genre:name ?name.
+                    ?movie movie:genre ?id.
+                }
+                GROUP BY ?id ?name
+                ORDER BY DESC(COUNT(?movie))
+            """)
+    return 'OK'
+
 
 def search(request):
     term = request.GET['term'] if 'term' in request.GET else 'John Doe'
@@ -105,6 +164,7 @@ def get_new_movies():
             ?id movie:title ?title.
             ?id movie:year ?year.
             ?id movie:score ?score.
+            ?id movie:isNew true.
         }
         ORDER BY DESC(?year) DESC(?score)
         LIMIT 6
@@ -117,6 +177,7 @@ def get_trending_movies():
         WHERE { 
             ?id movie:title ?title.
             ?id movie:year ?year.
+            ?id movie:isTrending true.
             OPTIONAL{
                 ?id movie:score ?score.
             }
@@ -287,6 +348,7 @@ def get_movie_actors(id):
         }
     """)
 
+
 def get_movie_awards(id):
     return wikisparql("""
         SELECT ?awardsLabel 
@@ -297,6 +359,7 @@ def get_movie_awards(id):
               SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
             }
     """.replace("ID",id))
+
 
 def get_movie_nomeations(id):
     return wikisparql("""
@@ -309,13 +372,15 @@ def get_movie_nomeations(id):
             }
     """.replace("ID",id))
 
+
 def get_movie_companies(id):
     return wikisparql("""
-        SELECT ?companiesLabel 
+        SELECT ?id ?companiesLabel
             WHERE 
             {
-              ?movie wdt:P345 "ID".
-              ?movie wdt:P272 ?companies
+              ?movie wdt:P345 'tt1431045'.
+              ?movie wdt:P272 ?companies.
+              ?companies wdt:P345 ?id
               SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
             }
     """.replace("ID",id))

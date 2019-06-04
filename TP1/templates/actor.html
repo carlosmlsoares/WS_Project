@@ -1,4 +1,4 @@
-{% extends 'static.html' %}
+ {% extends 'static.html' %}
 {% load static %}
 
 {% block headcontent %}
@@ -34,11 +34,13 @@
 										</thead>
 										<tbody>
                                             {% for i in content %}
-                                                <tr>
+                                                <tr vocab="http://schema.org/" resource="#{{ i.movie }}" typeof="Movie">
 											    <td>{{ forloop.counter }}</td>
-											    <td class="w3-list-img"><a href="{% url 'movie' i.movie %}"> <span>{{ i.title }}</span></a></td>
-											    <td>{{ i.year }}</td>
-											    <td>{{ i.score }}</td>
+											    <td class="w3-list-img" property="name" content="{{ i.title }}">
+                                                    <a href="{% url 'movie' i.movie %}"> <span>{{ i.title }}</span></a>
+                                                </td>
+											    <td property="year">{{ i.year }}</td>
+											    <td property="score">{{ i.score }}</td>
 										        </tr>
 										    {% endfor %}
 										</tbody>

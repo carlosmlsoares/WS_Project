@@ -24,9 +24,12 @@ def clean(value):
         return unidecode(value).strip()
 
 
-def sparql(query):
+def sparql(query, insert=False):
     CONN.setQuery(PREFIXES_SPARQL + query)
     CONN.setReturnFormat(JSON)
+    if insert:
+        CONN.setMethod("POST")
+        # CONN.queryType = "DELETE"
     json = CONN.query().convert()
 
     headers = json['head']['vars']

@@ -4,6 +4,19 @@
 {% block headcontent %}
     <link href="{% static 'css/list.css' %}" rel="stylesheet" type="text/css" media="all"/>
     <link href="{% static 'css/table-style.css' %}" rel="stylesheet" type="text/css" media="all"/>
+    <script>
+        function execute(btn, id){
+            $(btn).addClass('btn-success').prop('disabled', true);
+            $.ajax({
+                type: "POST",
+                url: "{% url 'exec_inferences' '0' %}" + id,
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+            });
+        }
+
+    </script>
 {% endblock %}
 
 {% block bodycontent %}
@@ -13,27 +26,28 @@
 			<div class="container">
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
-                        <h2 class="card-title">Trending Movies</h2><br>
+                        <h2 class="card-title">New Movies</h2>
                         <span class="card-text">
-                            Esta inferência é responsável por apresentar as tendências no mundo dos filmes.
+                            Recompute the most recent movies.
                         </span>
-                        <br><br><a href="#" class="btn btn-primary">Go somewhere</a>
+                        <br><br><a href="#" class="btn btn-primary" onclick="execute(this, 0)">Execute</a>
                     </div>
                 </div>
                 <br><br>
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
-                        <h2 class="card-title">Trending Movies</h2><br>
-                        <span class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</span>
-                        <br><br><a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h2 class="card-title">Trending Movies</h2>
+                        <span class="card-text">
+                            Recompute trending movies.</span>
+                        <br><br><a href="#" class="btn btn-primary" onclick="execute(this, 1)">Execute</a>
                     </div>
                 </div>
                 <br><br>
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
-                        <h2 class="card-title">Trending Movies</h2><br>
+                        <h2 class="card-title">Person Data</h2>
                         <span class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</span>
-                        <br><br><a href="#" class="btn btn-primary">Go somewhere</a>
+                        <br><br><a href="#" class="btn btn-primary" onclick="execute(this, 2)">Execute</a>
                     </div>
                 </div>
 			</div>

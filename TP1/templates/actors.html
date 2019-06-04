@@ -31,10 +31,12 @@
 										</thead>
 										<tbody>
                                             {% for i in actors %}
-                                                <tr>
+                                                <tr vocab="http://schema.org/" resource="#{{ i.id }}" typeof="Actor">
 											    <td>{{ forloop.counter }}</td>
-											    <td class="w3-list-img"><a href="{% url 'actor' i.id %}"> <span>{{ i.name }}</span></a></td>
-											    <td>{{ i.movies }}</td>
+											    <td class="w3-list-img" property="name" content="{{ i.name }}">
+                                                    <a href="{% url 'actor' i.id %}"> <span>{{ i.name }}</span></a>
+                                                </td>
+											    <td property="movieCount">{{ i.movies }}</td>
 										        </tr>
 										    {% endfor %}
 										</tbody>

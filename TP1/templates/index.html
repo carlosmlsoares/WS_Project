@@ -93,12 +93,12 @@
 
 {% block endbodycontent %}
 <script>
-    /*$('img[data-imdb]').each(function(){
+    $('img[data-imdb]').each(function(){
         $.ajax({
             url: "https://www.omdbapi.com/?i=" + $(this).data('imdb') + "&apikey=f614bcc4"
         }).done(function(data){
             $('img[data-imdb=' + data['imdbID'] + ']').attr('src', data['Poster']);
         })
-    });*/
+    });
 </script>
 {% endblock %}
