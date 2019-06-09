@@ -19,6 +19,16 @@ def movies(request):
 
 
 def movie(request, id):
+    sparql("""
+        DELETE {
+            movie:""" + id + """ movie:views ?current
+        } INSERT{
+            movie:""" + id + """ movie:views ?updated
+        } WHERE {
+            OPTIONAL { movie:""" + id + """ movie:views ?current. }
+            BIND ((IF(BOUND(?current), ?current + 1, 1)) AS ?updated)
+        }
+        """, update=True)
     return render(request, "movie.html", {
         'id': id,
         'genres': get_genres(),
@@ -81,6 +91,9 @@ def inferences(request):
 def exec_inferences(request, id):
     if id == '00':
         sparql("""
+                DELETE {
+                    ?old movie:isNew true
+                }
                 INSERT {
                     ?next movie:isNew true
                 }
@@ -97,7 +110,7 @@ def exec_inferences(request, id):
                         LIMIT 6
                     }
                 }
-            """)
+            """, update=True)
     elif id == '01':
         sparql("""
                 INSERT {
@@ -112,21 +125,30 @@ def exec_inferences(request, id):
                             ?next movie:year ?year.
                             ?next movie:views ?views.
                         }
-                        ORDER BY DESC(?year) DESC(?views)
+                        ORDER BY DESC(?views) DESC(?year)
                         LIMIT 6
                     }
                 }
-            """)
+            """, update=True)
     elif id == '02':
         sparql("""
-                SELECT ?id ?name
-                WHERE { 
-                    ?id genre:name ?name.
-                    ?movie movie:genre ?id.
+                DELETE {
+                    ?old_a worker:workedWith ?old_b
+                } INSERT {
+                    ?worker_a worker:workedWith ?worker_b
+                } WHERE { 
+                    {
+                        ?old_a worker:workedWith ?old_b
+                    } UNION { 
+                        SELECT *
+                        WHERE {
+                            ?worker_a worker:played_on ?movie.
+                            ?worker_b worker:played_on ?movie.
+                            FILTER (?worker_a != ?worker_b).
+                        }
+                    }
                 }
-                GROUP BY ?id ?name
-                ORDER BY DESC(COUNT(?movie))
-            """)
+            """, update=True)
     return 'OK'
 
 
@@ -170,18 +192,18 @@ def get_new_movies():
 
 def get_trending_movies():
     return sparql("""
-        SELECT *
-        WHERE { 
-            ?id movie:title ?title.
-            ?id movie:year ?year.
-            ?id movie:isTrending true.
-            OPTIONAL{
-                ?id movie:score ?score.
+            SELECT *
+            WHERE { 
+                ?id movie:title ?title.
+                ?id movie:year ?year.
+                ?id movie:isTrending true.
+                OPTIONAL{
+                    ?id movie:score ?score.
+                }
             }
-        }
-        ORDER BY DESC(?year) DESC(?views)
-        LIMIT 6
-    """)
+            ORDER BY DESC(?views) DESC(?year)
+            LIMIT 6
+        """)
 
 
 def get_all_movies():

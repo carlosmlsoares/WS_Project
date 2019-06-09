@@ -144,6 +144,11 @@
                                 <a href="{{ path }}">Directors</a>
                             </li>
 
+                            {% url 'inferences' as path %}
+							<li {% if request.path == path %}class="active"{% endif %} >
+                                <a href="{{ path }}">Infereneces</a>
+                            </li>
+
 						</ul>
 					</nav>
 				</div>

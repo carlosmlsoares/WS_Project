@@ -24,13 +24,16 @@ def clean(value):
         return unidecode(value).strip()
 
 
-def sparql(query, insert=False):
-    if insert:
-        c = SPARQLWrapper("http://localhost:7200/repositories/imdb")
+def sparql(query, update=False):
+    if update:
+        c = SPARQLWrapper("http://localhost:7200/repositories/imdb/statements")
+        print(c.__dict__.keys())
         c.setMethod("POST")
         c.setQuery(PREFIXES_SPARQL + query)
-        c.query()
-        return
+        try:
+            c.query()
+        finally:
+            return
 
     CONN.setQuery(PREFIXES_SPARQL + query)
     CONN.setReturnFormat(JSON)
