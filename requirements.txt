@@ -5,5 +5,5 @@ pytz==2018.9
 rdflib==4.2.2
 six==1.12.0
 SPARQLWrapper==1.8.2
-sqlparse==0.3.0
+sqlparse==0.4.4
 Unidecode==1.0.23
